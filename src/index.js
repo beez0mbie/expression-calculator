@@ -145,8 +145,3 @@ function expressionCalculator(expr) {
 module.exports = {
     expressionCalculator
 }
-
-// expressionCalculator(" 49 * 63 / 58 /44 * 36 * 39 + 32 - 41")
-// expressionCalculator('2*3')
-// expressionCalculator('58 * 85 * (  1 + 16 * 7 + (  82 * 31 * (  85 / 75 - 51 - 22  ) + 2 - 24  )  ) * 22 * (  27 + 67 + 0 + 93  )')
-//Division by zero
