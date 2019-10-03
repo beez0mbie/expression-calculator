@@ -2,12 +2,28 @@ function eval() {
     // Do not use eval!!!
     return;
 }
-
+let counterCalculator = 0
 function expressionCalculator(expr) {
     expr = removeSpaces(expr)
 
     function removeSpaces(someString) {  
         return someString.split(' ').join('')
+    }
+    
+    let left = 0
+    let right = 0
+    //проверяем количество скобок
+    if (counterCalculator === 0) {
+        for (let index = 0; index < expr.length; index++) {
+            if (expr[index] === '(') {
+                left++
+            } else if (expr[index] === ')') {
+                right++
+            }
+        }
+        if (!((left+right)%2 === 0) || left !== right){
+            throw new Error("ExpressionError: Brackets must be paired")
+        }
     }
 
     //умножение
@@ -41,8 +57,7 @@ function expressionCalculator(expr) {
         return someString
     }
 
-    //деление 
-    
+    //деление
     function division(someString) {
         //создаем будущий объект маппинга
         let divisObg = {}
@@ -53,9 +68,7 @@ function expressionCalculator(expr) {
         } else {
             newString = someString.split(/[*]|[-]|[+]/g)
         }
-        // let newString = someString.match(/[+-]?([0-9]*[.])?[0-9]+/g)
 
-        console.log(newString)
         //находим в массиве элементы с / разделяем их и делим
         for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('/')) {
@@ -68,19 +81,16 @@ function expressionCalculator(expr) {
                 // проходимся с индекса 1 потому что мы 0 уже присвоили
                 for (let index = 1; index < divisNumbers.length; index++) {
 
-                    console.log(divisNumbers[index])
                     if (Number(divisNumbers[index]) === 0) {
                         throw new Error("TypeError: Division by zero.")
-                    
                     }
-
                     result = result/Number(divisNumbers[index])
                 }
                 //записываем в объект результаты
                 divisObg[willDivis] = result
             }; 
         }
-        // заменяем перемноженный результат из объхекта в строку
+        // заменяем перемноженный результат из обьекта в строку
         for (const key in divisObg) {
             someString = someString.replace(key, divisObg[key] )
         }
@@ -90,16 +100,13 @@ function expressionCalculator(expr) {
     function sumAndDiff(someString) {
         //создаем будущий объект маппинга
         let sumObg = {}
-
         let newString = someString.split()
-        //console.log(newString)
          //находим в массиве элементы с +/- разделяем их и складываем
          for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('-') || newString[index].includes('+')) {
                 //запомним что складываем что бы заменить
                 let willSum = newString[index];
                 let sumNumbers = newString[index].match(/[+-]?([0-9]*[.])?[0-9]+/g);
-               // console.log(sumNumbers)
                 //сложим элементы в массиве
                 let result = 0
                 for (let index = 0; index < sumNumbers.length; index++) {
@@ -109,8 +116,7 @@ function expressionCalculator(expr) {
                 sumObg[willSum] = result
             }
         }
-        //заменяем то что сложили в сроке
-        //console.log(sumObg)
+        //заменяем то что сложили в строке
         for (const key in sumObg) {
             someString = someString.replace(key, sumObg[key] )
         }
@@ -118,42 +124,21 @@ function expressionCalculator(expr) {
     }
 
     function findBrackets(expr) {
-        let left = 0
-        let right = 0
-        //проверяем количество скобок
-        for (let index = 0; index < expr.length; index++) {
-            if (expr[index] === '(') {
-                left++
-            } else if (expr[index] === ')') {
-                right++
-            }
-        }
-        if (!((left+right)%2 === 0) || left !== right){
-            throw new Error("ExpressionError: Brackets must be paired")
-        }
         if (expr.includes('(') && expr.includes(')') ) {
-             //создаем будущий объект маппинга
-            let bracketsObg = {}
             let innnerExpr = expr.match(/[(].*[)]/g).join('')
-            // console.log(innnerExpr.slice(1,innnerExpr.length-1))
+            counterCalculator++
             result = expressionCalculator(innnerExpr.slice(1,innnerExpr.length-1))
-            // console.log(result)
             expr = expr.replace(innnerExpr,result)
-            // console.log(expr)
             return expr
         }
-
         return expr
     }
     
     expr = findBrackets(expr)
-    console.log(expr)
     expr = division(expr)
-    console.log(expr)
     expr = multiply(expr)
-    console.log(expr)
     expr = sumAndDiff(expr)
-    console.log(expr)
+
     return Number(expr)
 }
 
@@ -163,5 +148,5 @@ module.exports = {
 
 // expressionCalculator(" 49 * 63 / 58 /44 * 36 * 39 + 32 - 41")
 // expressionCalculator('2*3')
-expressionCalculator('85 * 97 / (  89 / 11 - 18 * 96  ) - 61')
+// expressionCalculator('58 * 85 * (  1 + 16 * 7 + (  82 * 31 * (  85 / 75 - 51 - 22  ) + 2 - 24  )  ) * 22 * (  27 + 67 + 0 + 93  )')
 //Division by zero
