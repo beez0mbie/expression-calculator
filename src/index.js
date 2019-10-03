@@ -46,10 +46,16 @@ function expressionCalculator(expr) {
     function division(someString) {
         //создаем будущий объект маппинга
         let divisObg = {}
-        console.log(someString)
+        let newString
         //разделяем строку по всез знакам кроме деления и создаем массив
-        let newString = someString.split(/[*]|[-]|[+]/g)
+        if (someString.match(/\d+[/][-]\d+[.]\d+/g)){
+            newString = someString.match(/\d+[/][-]\d+[.]\d+/g)
+        } else {
+            newString = someString.split(/[*]|[-]|[+]/g)
+        }
+        // let newString = someString.match(/[+-]?([0-9]*[.])?[0-9]+/g)
 
+        console.log(newString)
         //находим в массиве элементы с / разделяем их и делим
         for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('/')) {
@@ -62,8 +68,8 @@ function expressionCalculator(expr) {
                 // проходимся с индекса 1 потому что мы 0 уже присвоили
                 for (let index = 1; index < divisNumbers.length; index++) {
 
+                    console.log(divisNumbers[index])
                     if (Number(divisNumbers[index]) === 0) {
-
                         throw new Error("TypeError: Division by zero.")
                     
                     }
@@ -141,13 +147,13 @@ function expressionCalculator(expr) {
     }
     
     expr = findBrackets(expr)
-    // console.log(expr)
+    console.log(expr)
     expr = division(expr)
-    // console.log(expr)
+    console.log(expr)
     expr = multiply(expr)
-//    console.log(expr)
+    console.log(expr)
     expr = sumAndDiff(expr)
-//    console.log(expr)
+    console.log(expr)
     return Number(expr)
 }
 
@@ -157,5 +163,5 @@ module.exports = {
 
 // expressionCalculator(" 49 * 63 / 58 /44 * 36 * 39 + 32 - 41")
 // expressionCalculator('2*3')
-// expressionCalculator('(((68 - 85 / 75 * 64  ) / 15 + 73 ')
+expressionCalculator('85 * 97 / (  89 / 11 - 18 * 96  ) - 61')
 //Division by zero
