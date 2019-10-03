@@ -9,10 +9,6 @@ function expressionCalculator(expr) {
     function removeSpaces(someString) {  
         return someString.split(' ').join('')
     }
-    function UserException(message) {
-        this.message = message;
-        this.name = "User exception";
-     }
 
     //умножение
     function multiply(someString) {
@@ -50,7 +46,7 @@ function expressionCalculator(expr) {
     function division(someString) {
         //создаем будущий объект маппинга
         let divisObg = {}
-
+        console.log(someString)
         //разделяем строку по всез знакам кроме деления и создаем массив
         let newString = someString.split(/[*]|[-]|[+]/g)
 
@@ -115,41 +111,43 @@ function expressionCalculator(expr) {
         return someString
     }
 
-    function diff(someString) {
-        //создаем будущий объект маппинга
-        let diffObg = {}
-
-        let newString = someString.split(/[+]/g)
-
-         //находим в массиве элементы с - разделяем их и вычетаем
-         for (let index = 0; index < newString.length; index++) {
-            if (newString[index].includes('-')) {
-
-                //запомним что вычетаем что бы заменить
-                let willDiff = newString[index];
-                let diffNumbers = newString[index].split('-');
-                //вычтем элементы в массиве
-                let result = diffNumbers[0]
-                for (let index = 1; index < diffNumbers.length; index++) {
-                    result -= Number(diffNumbers[index])
-                }
-                //записываем в объект результаты
-                diffObg[willDiff] = result
-            }; 
+    function findBrackets(expr) {
+        let left = 0
+        let right = 0
+        //проверяем количество скобок
+        for (let index = 0; index < expr.length; index++) {
+            if (expr[index] === '(') {
+                left++
+            } else if (expr[index] === ')') {
+                right++
+            }
         }
-        //заменяем то что вычли в сроке
-        for (const key in diffObg) {
-            someString = someString.replace(key, diffObg[key] )
+        if (!((left+right)%2 === 0) || left !== right){
+            throw new Error("ExpressionError: Brackets must be paired")
         }
-        return someString
+        if (expr.includes('(') && expr.includes(')') ) {
+             //создаем будущий объект маппинга
+            let bracketsObg = {}
+            let innnerExpr = expr.match(/[(].*[)]/g).join('')
+            // console.log(innnerExpr.slice(1,innnerExpr.length-1))
+            result = expressionCalculator(innnerExpr.slice(1,innnerExpr.length-1))
+            // console.log(result)
+            expr = expr.replace(innnerExpr,result)
+            // console.log(expr)
+            return expr
+        }
+
+        return expr
     }
     
+    expr = findBrackets(expr)
+    // console.log(expr)
     expr = division(expr)
-    console.log(expr)
+    // console.log(expr)
     expr = multiply(expr)
-   console.log(expr)
+//    console.log(expr)
     expr = sumAndDiff(expr)
-   console.log(expr)
+//    console.log(expr)
     return Number(expr)
 }
 
@@ -159,5 +157,5 @@ module.exports = {
 
 // expressionCalculator(" 49 * 63 / 58 /44 * 36 * 39 + 32 - 41")
 // expressionCalculator('2*3')
-// expressionCalculator('49 * 63 / 58 * 36')
+// expressionCalculator('(((68 - 85 / 75 * 64  ) / 15 + 73 ')
 //Division by zero
