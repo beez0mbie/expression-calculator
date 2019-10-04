@@ -2,18 +2,23 @@ function eval() {
     // Do not use eval!!!
     return;
 }
-let counterCalculator = 0
+
 function expressionCalculator(expr) {
     expr = removeSpaces(expr)
+    checkPairsOfBrackets(expr)
+    expr = findBrackets(expr)
+    expr = division(expr)
+    expr = multiply(expr)
+    expr = sumAndDiff(expr)
 
     function removeSpaces(someString) {  
         return someString.split(' ').join('')
     }
-    
-    let left = 0
-    let right = 0
-    //проверяем количество скобок
-    if (counterCalculator === 0) {
+
+    function checkPairsOfBrackets(expr) {
+        let left = 0
+        let right = 0
+        //проверяем количество скобок
         for (let index = 0; index < expr.length; index++) {
             if (expr[index] === '(') {
                 left++
@@ -124,24 +129,24 @@ function expressionCalculator(expr) {
     }
 
     function findBrackets(expr) {
-        if (expr.includes('(') && expr.includes(')') ) {
-            let innnerExpr = expr.match(/[(].*[)]/g).join('')
-            counterCalculator++
-            result = expressionCalculator(innnerExpr.slice(1,innnerExpr.length-1))
-            expr = expr.replace(innnerExpr,result)
-            return expr
+        while (expr.includes('(') && expr.includes(')') ) {
+            let innnerExpr = expr.match(/[(][^()]*[)]/g)
+
+            for (let index = 0; index < innnerExpr.length; index++) {
+                result = expressionCalculator(innnerExpr[index].slice(1,innnerExpr[index].length-1))
+                expr = expr.replace(innnerExpr[index],result)
+                
+            }
+            findBrackets(expr)
         }
         return expr
     }
     
-    expr = findBrackets(expr)
-    expr = division(expr)
-    expr = multiply(expr)
-    expr = sumAndDiff(expr)
-
     return Number(expr)
 }
 
 module.exports = {
     expressionCalculator
 }
+
+// expressionCalculator('1 + 2) * 3')
