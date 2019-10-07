@@ -18,7 +18,7 @@ function expressionCalculator(expr) {
     function checkPairsOfBrackets(expr) {
         let left = 0
         let right = 0
-        //проверяем количество скобок
+        //Check pairs of brackets
         for (let index = 0; index < expr.length; index++) {
             if (expr[index] === '(') {
                 left++
@@ -31,59 +31,55 @@ function expressionCalculator(expr) {
         }
     }
 
-    //умножение
+    //Multiply
     function multiply(someString) {
-        //создаем будущий объект маппинга
+        //Need for mapping
         let multiplyObj = {}
 
-        //разделяем строку по всез знакам кроме умножения и создаем массив
-        let newString = someString.split(/[/]|[-]|[+]/g)
+        //Split without *+ or +-
+        let newString = someString.split(/\b[-+/]/g)
 
-        //находим в массиве элементы с * разделяем их и перемножаем
+        //find only * split it and multiply
         for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('*')) {
 
-                //запомним что перемножаем что бы заменить
+                //remember than multiply for future change
                 let willMultiply = newString[index];
                 let multiplyNumbers = newString[index].split('*');
-                //перемножим элементы в массиве
+                //multiply elements
                 let result = 1
                 for (let index = 0; index < multiplyNumbers.length; index++) {
                     result *= multiplyNumbers[index]
                 }
-                //записываем в объект результаты
+                //remember that we multiply in obj
                 multiplyObj[willMultiply] = result
             }; 
         }
-        // заменяем перемноженный результат из объхекта в строку
+        // find in string that we multiply and replace with result
         for (const key in multiplyObj) {
             someString = someString.replace(key, multiplyObj[key] )
         }
         return someString
     }
 
-    //деление
+    //Division
     function division(someString) {
-        //создаем будущий объект маппинга
+        //Need for mapping
         let divisObg = {}
-        let newString
-        //разделяем строку по всез знакам кроме деления и создаем массив
-        if (someString.match(/\d+[/][-]\d+[.]\d+/g)){
-            newString = someString.match(/\d+[/][-]\d+[.]\d+/g)
-        } else {
-            newString = someString.split(/[*]|[-]|[+]/g)
-        }
 
-        //находим в массиве элементы с / разделяем их и делим
+        //Split without /+ or /-
+        let newString = someString.split(/\b[-+*]/g)
+
+         //find only / split it and multiply
         for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('/')) {
 
-                //запомним что делим что бы заменить в будущем
+                //remember than divis for future change
                 let willDivis = newString[index];
                 let divisNumbers = newString[index].split('/');
-                //поделим элементы в массиве
+                //divis elements
                 let result = Number(divisNumbers[0])
-                // проходимся с индекса 1 потому что мы 0 уже присвоили
+                // let start from 1 index because 0 index we put into result
                 for (let index = 1; index < divisNumbers.length; index++) {
 
                     if (Number(divisNumbers[index]) === 0) {
@@ -91,11 +87,11 @@ function expressionCalculator(expr) {
                     }
                     result = result/Number(divisNumbers[index])
                 }
-                //записываем в объект результаты
+                //remember that we divis in obj
                 divisObg[willDivis] = result
             }; 
         }
-        // заменяем перемноженный результат из обьекта в строку
+        // find in string that we divis and replace it with result
         for (const key in divisObg) {
             someString = someString.replace(key, divisObg[key] )
         }
@@ -103,25 +99,25 @@ function expressionCalculator(expr) {
     }
 
     function sumAndDiff(someString) {
-        //создаем будущий объект маппинга
+        //Need for mapping
         let sumObg = {}
         let newString = someString.split()
-         //находим в массиве элементы с +/- разделяем их и складываем
+         //find only + or - split it and summarize
          for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('-') || newString[index].includes('+')) {
-                //запомним что складываем что бы заменить
+                //remember than summarize for future change
                 let willSum = newString[index];
                 let sumNumbers = newString[index].match(/[+-]?([0-9]*[.])?[0-9]+/g);
-                //сложим элементы в массиве
+                //summarize elements
                 let result = 0
                 for (let index = 0; index < sumNumbers.length; index++) {
                     result += Number(sumNumbers[index])
                 }
-                    //записываем в объект результаты
+                //remember that we summarize in obj
                 sumObg[willSum] = result
             }
         }
-        //заменяем то что сложили в строке
+        // find in string that we summarize and replace it with result
         for (const key in sumObg) {
             someString = someString.replace(key, sumObg[key] )
         }
@@ -130,11 +126,11 @@ function expressionCalculator(expr) {
 
     function findBrackets(expr) {
         while (expr.includes('(') && expr.includes(')') ) {
-            let innnerExpr = expr.match(/[(][^()]*[)]/g)
+            let innerExpr = expr.match(/[(][^()]*[)]/g)
 
-            for (let index = 0; index < innnerExpr.length; index++) {
-                result = expressionCalculator(innnerExpr[index].slice(1,innnerExpr[index].length-1))
-                expr = expr.replace(innnerExpr[index],result)
+            for (let index = 0; index < innerExpr.length; index++) {
+                result = expressionCalculator(innerExpr[index].slice(1,innerExpr[index].length-1))
+                expr = expr.replace(innerExpr[index],result)
                 
             }
             findBrackets(expr)
@@ -148,5 +144,3 @@ function expressionCalculator(expr) {
 module.exports = {
     expressionCalculator
 }
-
-// expressionCalculator('1 + 2) * 3')
