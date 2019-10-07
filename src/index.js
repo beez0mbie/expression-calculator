@@ -5,15 +5,11 @@ function eval() {
 
 function expressionCalculator(expr) {
     expr = removeSpaces(expr)
-    console.log(expr)
     checkPairsOfBrackets(expr)
     expr = findBrackets(expr)
     expr = division(expr)
-    console.log(expr)
     expr = multiply(expr)
-    console.log(expr)
     expr = sumAndDiff(expr)
-    console.log(expr)
 
     function removeSpaces(someString) {  
         return someString.split(' ').join('')
@@ -110,16 +106,14 @@ function expressionCalculator(expr) {
             someString = someString.replace('--', '+')
         }
         let newString = someString.split()
-        console.log(newString, 'sumAndDiff!!!!')
          //find only + or - split it and summarize
          for (let index = 0; index < newString.length; index++) {
             if (newString[index].includes('-') || newString[index].includes('+')) {
-            
+        
                 //remember than summarize for future change
                 let willSum = newString[index];
                 let sumNumbers = newString[index].match(/[+-]?([0-9]*[.])?[0-9]+/g);
                 //summarize elements
-                console.log(sumNumbers, 'sumNumbers -- sumAndDiff!!!!')
                 let result = 0
                 for (let index = 0; index < sumNumbers.length; index++) {
                     result += Number(sumNumbers[index])
@@ -129,7 +123,6 @@ function expressionCalculator(expr) {
             }
         }
         // find in string that we summarize and replace it with result
-        console.log(sumObg)
         for (const key in sumObg) {
             someString = someString.replace(key, sumObg[key] )
         }
@@ -156,5 +149,3 @@ function expressionCalculator(expr) {
 module.exports = {
     expressionCalculator
 }
-
-//! 93 * 30 / 81 * (  78 * 83 / (  71 * 13 - (  14 + 13 - 28 * 62  ) * 62  ) + 99 - (  80 - 89 + 17 * 42  )  ) 
